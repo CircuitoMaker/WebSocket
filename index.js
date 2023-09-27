@@ -15,7 +15,7 @@ app.use(express.static('public'));
 
 
 app.get('/', (req,res)=>{
-  res.send('On Line porta 443');
+  res.send('On Line p');
 })
 
 
@@ -78,8 +78,8 @@ for (const otherClient of clients) {
 
 
 
-server.listen(443, () => {
-  console.log('Servidor WebSocket rodando na porta 443');
+server.listen(3000, () => {
+  console.log('Servidor WebSocket rodando na porta 3000');
 });
 
 
