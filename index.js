@@ -78,7 +78,7 @@ for (const otherClient of clients) {
 
 
 
-server.listen(3000, () => {
+server.listen(443, () => {
   console.log('Servidor WebSocket rodando na porta 3000');
 });
 
