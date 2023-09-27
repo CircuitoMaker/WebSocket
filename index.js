@@ -78,8 +78,8 @@ for (const otherClient of clients) {
 
 
 
-server.listen(443, () => {
-  console.log('Servidor WebSocket rodando na porta 443');
+server.listen(80, () => {
+  console.log('Servidor WebSocket rodando na porta 80');
 });
 
 
