@@ -13,6 +13,12 @@ const clients = new Set();
 // Configurar o servidor HTTP
 app.use(express.static('public'));
 
+
+app.get('/', (req,res)=>{
+  res.send('On Line');
+})
+
+
 let teste = true;
 
 // Lidar com conexões WebSocket
