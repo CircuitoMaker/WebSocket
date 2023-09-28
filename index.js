@@ -89,8 +89,8 @@ for (const otherClient of clients) {
 
 
 
-server.listen(3000, () => {
-  console.log('Servidor WebSocket rodando na porta 3000');
+server.listen(process.env.PORT || 3000, () => {
+  console.log('Servidor WebSocket porta 3000');
 });
 
 
