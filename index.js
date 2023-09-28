@@ -2,6 +2,10 @@ const WebSocket = require('ws');
 const express = require('express');
 const http = require('http');
 
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
@@ -13,6 +17,13 @@ const clients = new Set();
 // Configurar o servidor HTTP
 app.use(express.static('public'));
 
+app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
+app.use(helmet());
+app.use(express.json());
+app.use(morgan('dev'));
+app.post('/login', (req, res, next) => {
+    res.json({ token: '123456' });
+});
 
 app.get('/', (req,res)=>{
   res.send('On Line p');
