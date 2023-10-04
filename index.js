@@ -91,7 +91,8 @@ if (data.to === data.id) {
     }
   } else {
     if (targetClient) {
-    targetClient.send(JSON.stringify({ message: `${data.message}` }));
+    //targetClient.send(JSON.stringify({ message: `${data.message}` }));
+    targetClient.send(JSON.stringify(`${data.message}`));
   }}}
      
 //
