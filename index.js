@@ -1,112 +1,122 @@
 const WebSocket = require('ws');
-const express = require('express');
 const http = require('http');
-
+const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-
 const app = express();
+const fs = require('fs');
+const path = require('path');
+app.use(cors());
+app.use(express.json());
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Armazenar todas as conexões de clientes em um conjunto
-const clients = new Set();
+// Armazenar as conexões dos clientes em um mapa
+const clients = new Map();
+
+// Quando uma conexão WebSocket é estabelecida
+wss.on('connection', (ws) => {
+  console.log('Cliente conectado.');
+
+  // Quando uma mensagem é recebida
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message);
+
+      // Verifica se a mensagem contém uma ID
+      if (data.id) {
+        // Armazena a conexão com a ID do cliente
+        clients.set(data.id, ws);
+        console.log(`Cliente ${data.id} conectado.`);
+
+        if (data.message == "sts") {
+          const sourceClient =  clients.get(data.id);
+          const caminhoArquivo = `${__dirname}/bancoDeDados/${data.to}.json`;
+        
+          if (fs.existsSync(caminhoArquivo)) {
+            // Leia o conteúdo do arquivo JSON
+            const conteudoArquivo = fs.readFileSync(caminhoArquivo, 'utf8');
+        
+            // Faça o parse do conteúdo JSON em um objeto JavaScript
+            const objetoJSON = JSON.parse(conteudoArquivo);
+        
+            // Envie o objeto JSON como resposta
+            sourceClient.send(JSON.stringify(objetoJSON));
+          }
+        }
+        
 
 
-// Configurar o servidor HTTP
-app.use(express.static('public'));
+        // Responde ao cliente com uma mensagem de confirmação
+        ws.send(JSON.stringify({ message: `Olá, ${data.id}! Você está conectado.` }));
+      } 
+      
+      if (data.to && data.message) {
+        // Se a mensagem contém "to" e "message", envie a mensagem para o cliente de destino
+        const targetClient = clients.get(data.to);
+   
+        const objetoParaEscrever = data.message
 
-app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
-app.use(helmet());
-app.use(express.json());
-app.use(morgan('dev'));
-app.post('/login', (req, res, next) => {
-    res.json({ token: '123456' });
+
+        // const objetoParaEscrever = {
+        //   "rele1": "0",
+        //   "rele2": "0",
+        //   "rele3": "0",
+        //   "rele4": "0",
+        //   "rele5": "0" };
+
+          // Nome do arquivo onde o objeto será escrito
+const nomeDoArquivo = `${data.to}.json`;
+
+// Converta o objeto para uma string JSON
+const objetoJSON = JSON.stringify(objetoParaEscrever, null, 2);
+
+// Escreva a string JSON no arquivo
+fs.writeFile( path.join(__dirname +"/bancoDeDados", nomeDoArquivo), objetoJSON, (err) => {
+  if (err) {
+    console.error('Erro ao escrever o arquivo JSON:', err);
+    return;
+  }
 });
 
-app.get('/', (req,res)=>{
-  res.send('On Line p');
-})
 
 
-let teste = true;
 
-// Lidar com conexões WebSocket
-wss.on('connection', (ws) => {
-  console.log('Cliente conectado');
-
- // Adicionar o cliente ao conjunto de clientes
- clients.add(ws);
-
+//
+if (data.to === data.id) {
  
-
-if(teste == true){
-  ws.send('desligarLed1');
-  teste=false
-}
-
-  ws.on('message', (message) => {
-    console.log(`Recebido: ${message}`);
-
-    if(message == "miau"){
-// Encaminhar a mensagem para todos os outros clientes conectados
-for (const otherClient of clients) {
-  if (otherClient !== ws && otherClient.readyState === WebSocket.OPEN) {
-    //otherClient.send(message);
-    otherClient.send('ligarLed1');
-    
-  }
-}
+    for (const client of clients.entries()) {
+      console.log("Enviando mensagem para cliente: " + client[0]);
+      client[1].send(JSON.stringify({ message: `${data.message}` }));
     }
+  } else {
+    if (targetClient) {
+    targetClient.send(JSON.stringify({ message: `${data.message}` }));
+  }}}
+     
+//
 
-
-
-    if(message == "mia"){
-      // Encaminhar a mensagem para todos os outros clientes conectados
-      for (const otherClient of clients) {
-        if (otherClient !== ws && otherClient.readyState === WebSocket.OPEN) {
-          //otherClient.send(message);
-          otherClient.send('desligarLed1');
-          
-        }
-      }
-          }
       
+    } catch (error) {
+      console.error('Erro ao processar a mensagem:', error);
+    }
+  });
 
 
-
-
-
-    if(message == "miau"){
- console.log("ahan");
- ws.send('desligarLed1');
-     }
-    
+  // Quando a conexão WebSocket é fechada
+  ws.on('close', () => {
+    for (const [id, client] of clients.entries()) {
+      if (client === ws) {
+        console.log(`Cliente ${id} desconectado.`);
+        clients.delete(id);
+        break;
+      }
+    }
   });
 });
 
+const PORT = process.env.PORT || 3000;
 
-
-
-server.listen(process.env.PORT || 3000, () => {
-  console.log('Servidor WebSocket porta 3000');
+server.listen(PORT, () => {
+  console.log(`Servidor WebSocket está ouvindo na porta ${PORT}`);
 });
-
-
-
-
-/*
-EXEMPLO DE CLIENT
-var net = require('net');
-var client = new net.Socket(); //Cria o socket do cliente
-client.connect(3000, '127.0.0.1', function() { //Inicia o socket do cliente
-    console.log('Conectado ao servidor');
-    client.write('Olá servidor! De, Cliente.');
-});
-client.on('data', function(data) {
-    console.log('Recebido: ' + data);
-});
-
-
-*/
