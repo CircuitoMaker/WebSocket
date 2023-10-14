@@ -1,0 +1,20 @@
+{
+  "data": {
+    "rele1": 1,
+    "rele2": 1,
+    "rele3": 1,
+    "rele4": 1,
+    "rele5": 0,
+    "temp": "25",
+    "umid": "54",
+    "sensor1": "12",
+    "sensor2": "0",
+    "sensor3": "0",
+    "sensor4": "52",
+    "sensor5": "48"
+  },
+  "id": "ESP32",
+  "token": "123456",
+  "group": "teste",
+  "user": "master"
+}

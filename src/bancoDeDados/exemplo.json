@@ -1,0 +1,20 @@
+{ 
+  "id":"fillipe",
+  "token":"123456",
+  "group":"ESP32",
+  "user":"master", 
+  "data": {
+      "rele1": "0",
+      "rele2": "0",
+      "rele3": "0",
+      "rele4": "0",
+      "rele5": "1", 
+      "temp":"0",
+      "umid":"0",
+      "sensor1":"0",
+      "sensor2":"0",
+      "sensor3":"0",
+      "sensor4":"0",
+      "sensor5":"0"
+	}
+}
