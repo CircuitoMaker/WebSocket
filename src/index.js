@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 
-const server = new WebSocket.Server({ port: 3000 });
+const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
 
 const groupData = {};
 let masterClients = new Set();
