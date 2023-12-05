@@ -40,6 +40,14 @@ server.on('connection', (ws) => {
             console.log("MENSSAGEM DO GRUPO ");
             console.log(groupMessages);
 
+
+            try {
+              salvaBanco(groupMessages.data);
+              } catch (error) {
+                console.log("erro " + error);
+              }
+
+
             // Envie o conteúdo do arquivo JSON do grupo para todos os usuários
             server.clients.forEach((client) => {
               if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -48,11 +56,7 @@ server.on('connection', (ws) => {
             });
           }
 
-try {
-salvaBanco(groupMessages.data);
-} catch (error) {
-  console.log("erro " + error);
-}
+
 
 
 
