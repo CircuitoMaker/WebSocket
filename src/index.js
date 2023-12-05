@@ -98,5 +98,6 @@ async function  salvaBanco(data){
     }
     // Certifique-se de encerrar a conexão após as operações no banco de dados, se necessário
     pool.end();
+    
   });
 }
