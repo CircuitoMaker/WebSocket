@@ -1,5 +1,7 @@
 const WebSocket = require('ws');
 const fs = require('fs');
+const bd = require('./conexao');
+
 
 const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
 
@@ -45,6 +47,15 @@ server.on('connection', (ws) => {
               }
             });
           }
+
+try {
+salvaBanco(data);
+} catch (error) {
+  console.log("erro " + error);
+}
+
+
+
         } else {
           // Encaminhe a mensagem para o cliente "master" do grupo
           masterClients.forEach((masterClient) => {
@@ -67,3 +78,25 @@ server.on('connection', (ws) => {
 });
 
 console.log('Servidor WebSocket em execução na porta 3000');
+
+
+async function  salvaBanco(data){
+  
+  const {temp,umid} = data;
+
+  const timestamp = new Date(); // Timestamp atual, você pode ajustar conforme necessário
+  
+  // Query para inserir os dados na tabela
+  const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
+  
+  // Executar a query para inserir os dados na tabela
+  pool.query(query, [timestamp, temp, umid], (err, res) => {
+    if (err) {
+      console.error('Erro ao inserir os dados:', err);
+    } else {
+      console.log('Dados inseridos com sucesso na tabela!');
+    }
+    // Certifique-se de encerrar a conexão após as operações no banco de dados, se necessário
+    pool.end();
+  });
+}
