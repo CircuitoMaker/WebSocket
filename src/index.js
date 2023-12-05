@@ -100,7 +100,7 @@ console.log("Dados de umidade recebidos = " + umid);
    const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
   
     pool.query(query, [timestamp, temp, umid]);
-    pool.end();
+    //pool.end();
   } catch (error) {
     console.log("erro de gravaçao ao BD " + error);
   }
