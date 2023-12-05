@@ -80,7 +80,7 @@ salvaBanco(data);
 console.log('Servidor WebSocket em execução na porta 3000');
 
 
-async function  salvaBanco(data){
+async function salvaBanco(data){
   
   const {temp,umid} = data;
 
@@ -90,14 +90,14 @@ async function  salvaBanco(data){
   const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
   
   // Executar a query para inserir os dados na tabela
-  pool.query(query, [timestamp, temp, umid], (err, res) => {
+  bd.query(query, [timestamp, temp, umid], (err, res) => {
     if (err) {
       console.error('Erro ao inserir os dados:', err);
     } else {
       console.log('Dados inseridos com sucesso na tabela!');
     }
     // Certifique-se de encerrar a conexão após as operações no banco de dados, se necessário
-    pool.end();
-    
+    bd.end();
+
   });
 }
