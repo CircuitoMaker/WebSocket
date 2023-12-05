@@ -5,6 +5,24 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
+
+app.get('/dados', async (req, res) => {
+  try {
+    const query = `SELECT * FROM dados_temperatura_umidade`;
+    const resultado = await pool.query(query);
+    const rows = resultado.rows;
+
+    return res.json(rows); // Retorna os dados do banco como resposta
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Erro ao buscar Dados' });
+  }
+});
+
+
+
+
+
 const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
 
 const groupData = {};
@@ -114,16 +132,5 @@ console.log("Dados de umidade recebidos = " + umid);
 
 
 
-// busca livro
-app.get('/dados', async (req, res) => {
-  try {
-    const query = `SELECT * from dados_temperatura_umidade;`;
-    const resultado = await pool.query(query);
-    const rows = resultado.rows;    
-    return res.json(resultado);
-    }
-  catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Erro ao buscar Dados' });
-  }
-});
+
+app.listen({ port: process.env.PORT || 3001 })
