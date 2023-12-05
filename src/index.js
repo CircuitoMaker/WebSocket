@@ -84,12 +84,15 @@ async function salvaBanco(data){
   
   const {temp,umid} = data;
 
+console.log("dados de temperatura recebidos = " + data);
+
   const timestamp = new Date(); // Timestamp atual, você pode ajustar conforme necessário
   
-  // Query para inserir os dados na tabela
-  const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
-  
+ 
   try {
+   // Query para inserir os dados na tabela
+   const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
+  
     pool.query(query, [timestamp, temp, umid]);
     pool.end();
   } catch (error) {
