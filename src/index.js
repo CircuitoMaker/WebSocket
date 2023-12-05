@@ -1,6 +1,6 @@
 const WebSocket = require('ws');
 const fs = require('fs');
-const bd = require('./conexao');
+const pool = require('./conexao');
 
 
 const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
@@ -89,15 +89,12 @@ async function salvaBanco(data){
   // Query para inserir os dados na tabela
   const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
   
-  // Executar a query para inserir os dados na tabela
-  bd.query(query, [timestamp, temp, umid], (err, res) => {
-    if (err) {
-      console.error('Erro ao inserir os dados:', err);
-    } else {
-      console.log('Dados inseridos com sucesso na tabela!');
-    }
-    // Certifique-se de encerrar a conexão após as operações no banco de dados, se necessário
-    bd.end();
+  try {
+    pool.query(query, [timestamp, temp, umid]);
+    pool.end();
+  } catch (error) {
+    console.log("erro de gravaçao ao BD " + error);
+  }
 
-  });
+
 }
