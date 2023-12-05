@@ -1,7 +1,9 @@
 const WebSocket = require('ws');
 const fs = require('fs');
 const pool = require('./conexao');
-
+const express = require('express');
+const app = express();
+app.use(express.json());
 
 const server = new WebSocket.Server({ port: process.env.PORT || 3000 });
 
@@ -81,6 +83,10 @@ server.on('connection', (ws) => {
   });
 });
 
+
+
+
+
 console.log('Servidor WebSocket em execução na porta 3000');
 
 
@@ -94,7 +100,6 @@ console.log("Dados de umidade recebidos = " + umid);
 
   const timestamp = new Date(); // Timestamp atual, você pode ajustar conforme necessário
   
- 
   try {
    // Query para inserir os dados na tabela
    const query = 'INSERT INTO dados_temperatura_umidade (timestamp, temperatura, umidade) VALUES ($1, $2, $3)';
@@ -104,6 +109,21 @@ console.log("Dados de umidade recebidos = " + umid);
   } catch (error) {
     console.log("erro de gravaçao ao BD " + error);
   }
-
-
 }
+
+
+
+
+// busca livro
+app.get('/dados', async (req, res) => {
+  try {
+    const query = `SELECT * from dados_temperatura_umidade;`;
+    const resultado = await pool.query(query);
+    const rows = resultado.rows;    
+    return res.json(resultado);
+    }
+  catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Erro ao buscar Dados' });
+  }
+});
