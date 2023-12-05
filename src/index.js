@@ -49,7 +49,7 @@ server.on('connection', (ws) => {
           }
 
 try {
-salvaBanco(data);
+salvaBanco(groupMessages.data);
 } catch (error) {
   console.log("erro " + error);
 }
@@ -82,7 +82,7 @@ console.log('Servidor WebSocket em execução na porta 3000');
 
 async function salvaBanco(dados){
   
-const data = JSON.stringify(dados)
+//const data = JSON.stringify(dados)
   const temp = data.temp;
   const umid = data.umid;
  
