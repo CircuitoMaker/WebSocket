@@ -84,9 +84,8 @@ server.on('connection', (ws) => {
 console.log('Servidor WebSocket em execução na porta 3000');
 
 
-async function salvaBanco(dados){
+async function salvaBanco(data){
   
-//const data = JSON.stringify(dados)
   const temp = data.temp;
   const umid = data.umid;
  
