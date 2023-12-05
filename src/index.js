@@ -82,9 +82,11 @@ console.log('Servidor WebSocket em execução na porta 3000');
 
 async function salvaBanco(data){
   
-  const {temp,umid} = data;
-
-console.log("dados de temperatura recebidos = " + data);
+  const temp = data.temp;
+  const umid = data.umid;
+ 
+console.log("Dados de temperatura recebidos = " + temp);
+console.log("Dados de umidade recebidos = " + umid);
 
   const timestamp = new Date(); // Timestamp atual, você pode ajustar conforme necessário
   
