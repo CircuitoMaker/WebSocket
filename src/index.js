@@ -6,18 +6,18 @@ const app = express();
 app.use(express.json());
 
 
-app.get('/dados', async (req, res) => {
-  try {
-    const query = `SELECT * FROM dados_temperatura_umidade`;
-    const resultado = await pool.query(query);
-    const rows = resultado.rows;
+// app.get('/dados', async (req, res) => {
+//   try {
+//     const query = `SELECT * FROM dados_temperatura_umidade`;
+//     const resultado = await pool.query(query);
+//     const rows = resultado.rows;
 
-    return res.json(rows); // Retorna os dados do banco como resposta
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Erro ao buscar Dados' });
-  }
-});
+//     return res.json(rows); // Retorna os dados do banco como resposta
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ error: 'Erro ao buscar Dados' });
+//   }
+// });
 
 
 
@@ -133,4 +133,3 @@ console.log("Dados de umidade recebidos = " + umid);
 
 
 
-app.listen({ port: process.env.PORT || 3001 })
